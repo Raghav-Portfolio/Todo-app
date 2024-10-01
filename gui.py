@@ -11,10 +11,15 @@ list_box=fsg.Listbox(values=functions.get_todos(), key='todos',
 #gets the list of existing todos from the file
 
 edit_button=fsg.Button('Edit')
-
+complete_button=fsg.Button('Complete')
+exit_button=fsg.Button('Exit') 
  
 window=fsg.Window('My To-Do App', 
-                  layout=[[label],[input, add_button], [list_box, edit_button]], 
+                  layout=[[label],
+                          [input, add_button], 
+                          [list_box, edit_button, complete_button],
+                          [exit_button]
+                          ], 
                   font=('Helvetica', 16)
                   )
 # this "window" is the parent instance that contains information from all previous instances
@@ -50,7 +55,19 @@ while True:
             functions.write_todos(todos)
             window['todos'].update(values=todos) 
             # windows['todos'] is the listbox and gets the argument from the key ofr Listbox defined earlier
+        case 'Complete':
+            todo_to_complete = values['todos'][0]
+            todos=functions.get_todos()
+            todos.remove(todo_to_complete)
+            functions.write_todos(todos)
+            window['todos'].update(values=todos)
+            window['to-do'].update(value='')
+# this line is important because even after removing an item from the listbox,  
+# the input text box will still show the removed item. Thgis line will clear the input text box
             
+        
+        case 'Exit':
+            break
         case 'todos':
             todo = values['todos']
             window['to-do'].update(value=todo[0])
